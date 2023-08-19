@@ -5,44 +5,47 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>otp verification</title>
     <style>
-        .container{
-             width: 302px;
-             height: 175px;
-             position: absolute;
-             left: 0px;
-             right: 0px;
-             top:0px;
-             bottom: 0px;
-             margin: auto;
-        }
-        #number, #verificationcode{
-            width: calc(100% - 24px);
-            padding: 10px;
-            font-size: 20px;
-            margin-bottom: 0px;
-            outline: none;
-        }
-        #recaptcha-container{
-            margin-bottom: 5px;
-        }
-        #send, #verify{
-            width: 100%;
-            height: 40px;
-            outline: none;
-        }
-        .p-conf, .n-conf{
-            width: calc(100% - 22px);
-            border: 2px solid green;
-            border-radius: 4px;
-            padding: 8px 10px;
-            margin: 4px 0px;
-            background-color:rgba(0, 249, 12, 0.5) ;
-            display: none;
-        }
-        .n-conf{
-            border-color: red;
-            background-color:rgba(255, 0, 4, 0.5);
-        }
+      .container {
+        width: 302px;
+        height: 175px;
+        position: absolute;
+        left: 0px;
+        right: 0px;
+        top: 0px;
+        bottom: 0px;
+        margin: auto;
+      }
+      #number,
+      #verificationcode {
+        width: calc(100% - 24px);
+        padding: 10px;
+        font-size: 20px;
+        margin-bottom: 0px;
+        outline: none;
+      }
+      #recaptcha-container {
+        margin-bottom: 5px;
+      }
+      #send,
+      #verify {
+        width: 100%;
+        height: 40px;
+        outline: none;
+      }
+      .p-conf,
+      .n-conf {
+        width: calc(100% - 22px);
+        border: 2px solid green;
+        border-radius: 4px;
+        padding: 8px 10px;
+        margin: 4px 0px;
+        background-color: rgba(0, 249, 12, 0.5);
+        display: none;
+      }
+      .n-conf {
+        border-color: red;
+        background-color: rgba(255, 0, 4, 0.5);
+      }
     </style>
   </head>
   <body>
@@ -50,11 +53,16 @@
       <div id="sender">
         <input type="number" id="number" placeholder="+265.." />
         <div id="recaptcha-container"></div>
-        <input type="button" id="send" value="send" />
+        <input type="button" id="send" value="send" onclick="phoneAuth()" />
       </div>
-      <div id="verifier" style="display: none;">
+      <div id="verifier" style="display: none">
         <input type="text" id="verificationcode" placeholder="OTP Code" />
-        <input type="button" id="verify" value="Verify" />
+        <input
+          type="button"
+          id="verify"
+          value="Verify"
+          onclick="codeverify()"
+        />
         <div class="p-conf">Number verified</div>
         <div class="n-conf">OTP ERROR</div>
       </div>
@@ -62,28 +70,64 @@
     <script src="https://www.gstatic.com/firebasejs/9.12.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
 
-<script>
-    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyALp2wvKNaAO0ivsLZipiDkXAXNdiRS7fM",
-  authDomain: "anonymous265-43776.firebaseapp.com",
-  projectId: "anonymous265-43776",
-  storageBucket: "anonymous265-43776.appspot.com",
-  messagingSenderId: "646381452516",
-  appId: "1:646381452516:web:ad128778901e9c2d6480f1",
-  measurementId: "G-82EHZTFZ6V"
-};
+    <script>
+      // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+      const firebaseConfig = {
+        apiKey: "AIzaSyALp2wvKNaAO0ivsLZipiDkXAXNdiRS7fM",
+        authDomain: "anonymous265-43776.firebaseapp.com",
+        projectId: "anonymous265-43776",
+        storageBucket: "anonymous265-43776.appspot.com",
+        messagingSenderId: "646381452516",
+        appId: "1:646381452516:web:ad128778901e9c2d6480f1",
+        measurementId: "G-82EHZTFZ6V",
+      };
 
-// initializing firebase SDK
-firebase.initializeApp(firebaseConfig);
+      // initializing firebase SDK
+      firebase.initializeApp(firebaseConfig);
 
-// render recaptcha verifier
-render();
-function render() {
-    window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container');
-    recaptchaVerifier.render();
-  }
+      // render recaptcha verifier
+      render();
+      function render() {
+        window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
+          "recaptcha-container"
+        );
+        recaptchaVerifier.render();
+      }
 
-</script>    
+      // function for send OTP
+      function phoneAuth() {
+        var number = document.getElementById("number").value;
+        firebase
+          .auth()
+          .signInWithPhoneNumber(number, window.recaptchaVerifier)
+          .then(function (confirmationResult) {
+            window.confirmationResult = confirmationResult;
+            coderesult = confirmationResult;
+            document.getElementById("sender").style.display = "none";
+            document.getElementById("verifier").style.display = "block";
+          })
+          .catch(function (error) {
+            // error in sending OTP
+            alert(error.message);
+          });
+      }
+
+      // function for OTP verify
+      function codeverify() {
+        var code = document.getElementById("verificationcode").value;
+        coderesult
+          .confirm(code)
+          .then(function () {
+            document.getElementsByClassName("p-conf")[0].style.display =
+              "block";
+            document.getElementsByClassName("n-conf")[0].style.display = "none";
+          })
+          .catch(function () {
+            document.getElementsByClassName("p-conf")[0].style.display = "none";
+            document.getElementsByClassName("n-conf")[0].style.display =
+              "block";
+          });
+      }
+    </script>
   </body>
 </html>
