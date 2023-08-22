@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 <head>
     <title>Phone Number Authentication with Firebase Web</title>
@@ -13,31 +14,64 @@
 <form>
     <input type="text" id="verificationCode" placeholder="Enter verification code">
     <button type="button" onclick="codeverify();">Verify code</button>
-
 </form>
 
-
-<script src="https://www.gstatic.com/firebasejs/9.12.1/firebase-app-compat.js"></script>
- <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
-
-<!-- TODO: Add SDKs for Firebase products that you want to use
-     https://firebase.google.com/docs/web/setup#config-web-app -->
+<script src="https://www.gstatic.com/firebasejs/10.2.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.2.0/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.2.0/firebase-firestore.js"></script>
 
 <script>
     // Your web app's Firebase configuration
-   // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyDnB-KOSk8HFsgZ5eG6hRz6BEuA0VdQJ1g",
-  authDomain: "texttornado-fe8ef.firebaseapp.com",
-  projectId: "texttornado-fe8ef",
-  storageBucket: "texttornado-fe8ef.appspot.com",
-  messagingSenderId: "409521879986",
-  appId: "1:409521879986:web:78ffb62c48d698e7c402ab",
-  measurementId: "G-84J6YPLHHC"
-};
+    const firebaseConfig = {
+        apiKey: "AIzaSyDnB-KOSk8HFsgZ5eG6hRz6BEuA0VdQJ1g",
+        authDomain: "texttornado-fe8ef.firebaseapp.com",
+        projectId: "texttornado-fe8ef",
+        storageBucket: "texttornado-fe8ef.appspot.com",
+        messagingSenderId: "409521879986",
+        appId: "1:409521879986:web:78ffb62c48d698e7c402ab",
+        measurementId: "G-84J6YPLHHC"
+    };
+    
     // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
+    const app = firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth(); // Initialize Firebase Authentication
+    const firestore = firebase.firestore(); // Initialize Firestore
+    
+    window.onload = function () {
+        render();
+    };
+
+    function render() {
+        window.recaptchaVerifier = new auth.RecaptchaVerifier('recaptcha-container');
+        recaptchaVerifier.render();
+    }
+
+    function phoneAuth() {
+        var number = document.getElementById('number').value;
+        auth.signInWithPhoneNumber(number, window.recaptchaVerifier)
+        .then(function (confirmationResult) {
+            window.confirmationResult = confirmationResult;
+            coderesult = confirmationResult;
+            console.log(coderesult);
+            alert("Message sent");
+        })
+        .catch(function (error) {
+            alert(error.message);
+        });
+    }
+
+    function codeverify() {
+        var code = document.getElementById('verificationCode').value;
+        confirmationResult.confirm(code)
+        .then(function (result) {
+            alert("Successfully registered");
+            var user = result.user;
+            console.log(user);
+        })
+        .catch(function (error) {
+            alert(error.message);
+        });
+    }
 </script>
-<script src="NumberAuthentication.js" type="text/javascript"></script>
 </body>
 </html>
