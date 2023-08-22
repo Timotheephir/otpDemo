@@ -33,22 +33,20 @@
     };
     
     // Initialize Firebase
-    const app = firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth(); // Initialize Firebase Authentication
-    const firestore = firebase.firestore(); // Initialize Firestore
+    firebase.initializeApp(firebaseConfig);
     
     window.onload = function () {
         render();
     };
 
     function render() {
-        window.recaptchaVerifier = new auth.RecaptchaVerifier('recaptcha-container');
+        window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container');
         recaptchaVerifier.render();
     }
 
     function phoneAuth() {
         var number = document.getElementById('number').value;
-        auth.signInWithPhoneNumber(number, window.recaptchaVerifier)
+        firebase.auth().signInWithPhoneNumber(number, window.recaptchaVerifier)
         .then(function (confirmationResult) {
             window.confirmationResult = confirmationResult;
             coderesult = confirmationResult;
