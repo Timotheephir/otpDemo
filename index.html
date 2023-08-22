@@ -20,17 +20,29 @@
 <script src="https://www.gstatic.com/firebasejs/10.2.0/firebase-auth.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.2.0/firebase-firestore.js"></script>
 
-<script>
-    // Your web app's Firebase configuration
-    const firebaseConfig = {
-        apiKey: "AIzaSyDnB-KOSk8HFsgZ5eG6hRz6BEuA0VdQJ1g",
-        authDomain: "texttornado-fe8ef.firebaseapp.com",
-        projectId: "texttornado-fe8ef",
-        storageBucket: "texttornado-fe8ef.appspot.com",
-        messagingSenderId: "409521879986",
-        appId: "1:409521879986:web:78ffb62c48d698e7c402ab",
-        measurementId: "G-84J6YPLHHC"
-    };
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.2.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.2.0/firebase-analytics.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyDnB-KOSk8HFsgZ5eG6hRz6BEuA0VdQJ1g",
+    authDomain: "texttornado-fe8ef.firebaseapp.com",
+    projectId: "texttornado-fe8ef",
+    storageBucket: "texttornado-fe8ef.appspot.com",
+    messagingSenderId: "409521879986",
+    appId: "1:409521879986:web:78ffb62c48d698e7c402ab",
+    measurementId: "G-84J6YPLHHC"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+
     
     // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
